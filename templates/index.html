@@ -89,52 +89,88 @@
       {% block breadcrumb %}{% endblock breadcrumb %}
       {% block header %}
       <div class="page-header">
-        <h1>{{ config.title }} <small>{{ config.description }}</small></h1>
+        <h1>{{ config.description }}</h1>
       </div>
       {% endblock header %}
       {% block meta %}{% endblock meta %}
     </header>
     
     <div class="row-fluid">
-
-      <div class="span9 bs-docs-sidebar">
-      {% block main %}
-        {% for page in paginator.pages %}
-          {{ macro::post_max(page=page) }}
-        {% endfor %}
-
-        {{ macro::paginator(ref=paginator, extra=config.extra) }}
-      {% endblock main %}
-      </div> <!-- span9 -->
-
-      <div class="span3 bs-docs-sidebar">
-      {% block sidebar %}
-        <h1>Search</h1>
-        <form class="form-search">
-          <input id="search" type="text" class="input-large search-query">
-        </form>
-        <div class="search-results">
-          <div class="search-results__items"></div>
-        </div>
-        <p></p>
-        <h1>Categories</h1>
-        <ul class="nav nav-list bs-docs-sidenav">
-          {% set categories = get_taxonomy(kind="categories") %}
-          {% for cat in categories.items %}
-            <li><a href="{{ config.base_url }}/categories/{{ cat.name }}">{{ cat.name }}</a></li>
-          {% endfor %}
-        </ul>
-        <p></p>
-        <h1>Tags</h1>
-        <ul class="nav nav-list bs-docs-sidenav">        
-          {% set tags = get_taxonomy(kind="tags") %}
-          {% for tag in tags.items %}
-            <li><a href="{{ config.base_url }}/tags/{{ tag.name }}">{{ tag.name }}</a></li>
-          {% endfor %}    
-        </ul>
-      {% endblock sidebar %}
-      </div>
-
+      <div>
+        {% block main %}
+        {% if config.extra.hero.enable %}
+        <hr class="soften">
+        <section id="hero">
+          <div class="container">
+            <div class="row">
+              <div id="primary-font" class="span8">
+                  <span>
+                      {{ config.extra.hero.intro }}
+                  </span>
+                  <p>
+                      {{ config.extra.hero.subtitle }}
+                  </p>
+                  <h3>
+                      {{ config.extra.hero.content }}
+                  </h3>
+                  <p>
+                    <div>
+                        {% if config.extra.hero.button.enable %}
+                        <a href="{{ config.extra.hero.button.url }}" class="btn btn-info" {% if config.extra.hero.button.download %}"download" {% else %}"" {% endif %}
+                        {% if config.extra.hero.button.newPage %}
+                          target="_blank"
+                          {% endif %}>
+                            {{ config.extra.hero.button.name }}
+                        </a>
+                        {% endif %}
+                    </div>
+                  </p>
+              </div>
+              <div class="span4">
+                  <div class="row justify-content-center">
+                        <img src="{{ config.extra.hero.image }}"
+                            class="img-thumbnail mx-auto"
+                            alt=""
+                            width="300"
+                            height="300"
+                        >
+                  </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+        {% if config.extra.about.enable %}
+        <hr class="soften">
+        <section id="about" class="py-0 py-sm-5">
+            <div class="container bg-transparent">
+                <h3 class="text-center bg-transparent">{{ config.extra.about.title }}</h3>
+                <div class="bg-transparent row justify-content-center px-3 py-5">
+                    {% if config.extra.about.image %}
+                    <div class="span4">
+                        <div class="">
+                            <img src="{{ config.extra.about.image }}" class="img-thumbnail mx-auto" alt="" width="300" height="300">
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="col-sm-12 col-md-12 col-lg-8 content">
+                        {{ config.extra.about.content }}
+        
+                        {% if config.extra.about.skills.enable %}
+                        {{ config.extra.about.skills.title }}
+                        <div>
+                            {% for item in config.extra.about.skills.items %}
+                            <button type="button">{{ item }}</button>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        {% endblock main %}
+      </div> 
     </div> <!-- row -->
   </div> <!-- container navmargin -->
 
@@ -157,6 +193,9 @@
         {% endif %}
         {% if config.extra.gitlab_user %}
         <a href="https://gitlab.com/{{ config.extra.gitlab_user }}" target="_blank">GitLab</a>
+        {% endif %}
+        {% if config.extra.custom.url %}
+        <a href="{{ config.extra.custom.url }}" target="_blank">{{ config.extra.custom.name }}</a>
         {% endif %}
         |
         Built on <a href="https://getzola.org" target="_blank">Zola</a>
