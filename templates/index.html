@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}">
   <title>{% block title %}{{ config.title }}{% endblock title %}</title>
-  
+
   {% if config.generate_rss %}
   <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml") }}">
   {% endif %}
@@ -94,7 +94,7 @@
       {% endblock header %}
       {% block meta %}{% endblock meta %}
     </header>
-    
+
     <div class="row-fluid">
       <div>
         {% block main %}
@@ -155,7 +155,7 @@
                     {% endif %}
                     <div class="col-sm-12 col-md-12 col-lg-8 content">
                         {{ config.extra.about.content }}
-        
+
                         {% if config.extra.about.skills.enable %}
                         {{ config.extra.about.skills.title }}
                         <div>
@@ -169,8 +169,68 @@
             </div>
         </section>
         {% endif %}
+
+        {% if config.extra.experience.enable %}
+        <section id="experience" class="py-5">
+            <div class="container">
+                <h3 class="text-center">{{ config.extra.experience.title }}</h3>
+                <div class="row justify-content-center">
+                    <div class="col-sm-12 col-md-8 col-lg-8 py-5">
+                        <div class="experience-container px-3 pt-2">
+                            <ul class="nav nav-pills mb-3 bg-transparent primary-font" id="pills-tab" role="tablist">
+                                {% for company in config.extra.experiences.companies %}
+                                {% set sanitizedCompany = company.company | replace(from=" ", to="-") %}
+                                <li class="nav-item px-1 bg-transparent" role="presentation">
+                                    <div
+                                        class="nav-link bg-transparent{% if loop.first %} active{% endif %}"
+                                        aria-selected="{{ loop.first }}"
+                                        role="tab"
+                                        data-bs-toggle="pill"
+                                        id='{{ sanitizedCompany }}-tab'
+                                        data-bs-target='#pills-{{ sanitizedCompany }}'
+                                        aria-controls='{{ sanitizedCompany }}'
+                                    >
+                                        {{ company.company }}
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+              <div class="bd-example bd-example-tabs">
+                <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0px;">
+                  {% for company in config.extra.experiences.companies %}
+                  {% set sanitizedCompany = company.company | replace(from=" ", to="-") %}
+                  <li class="nav-item {% if loop.first %} active{% endif %}">
+                    <a class="nav-link {% if loop.first %} active{% endif %}" id="{{ sanitizedCompany }}-tab" data-toggle="tab" href="#{{ sanitizedCompany }}" role="tab" aria-controls="{{ sanitizedCompany }}" aria-selected="true">{{ company.company }}</a>
+                  </li>
+                  {% endfor %}
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                  {% for company in config.extra.experiences.companies %}
+                  {% set sanitizedCompany = company.company | replace(from=" ", to="-") %}
+                  <div class="tab-pane {% if loop.first %} active show{% endif %}" id="{{ sanitizedCompany }}" role="tabpanel" aria-labelledby="{{ sanitizedCompany }}-tab">
+                    <div class="hero-unit">
+                      <h1>{{ company.company }}</h1>
+                      <p>{{ company.company }} {{ company.companyUrl }}</p>
+                    </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+        </section>
+        {% endif %}
+
         {% endblock main %}
-      </div> 
+
+
+      </div>
     </div> <!-- row -->
   </div> <!-- container navmargin -->
 
