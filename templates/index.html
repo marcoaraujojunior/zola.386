@@ -98,8 +98,10 @@
     <div class="row-fluid">
       <div>
         {% block main %}
-        {% if config.extra.hero.enable %}
+        {% if config.extra.hero.enable | default(value=false) %}
+        <br />
         <hr class="soften">
+        <br />
         <section id="hero">
           <div class="container">
             <div class="row">
@@ -115,9 +117,9 @@
                   </h3>
                   <p>
                     <div>
-                        {% if config.extra.hero.button.enable %}
+                        {% if config.extra.hero.button.enable | default(value=false) %}
                         <a href="{{ config.extra.hero.button.url }}" class="btn btn-info" {% if config.extra.hero.button.download %}"download" {% else %}"" {% endif %}
-                        {% if config.extra.hero.button.newPage %}
+                        {% if config.extra.hero.button.newPage | default(value=true) %}
                           target="_blank"
                           {% endif %}>
                             {{ config.extra.hero.button.name }}
@@ -140,27 +142,28 @@
           </div>
         </section>
         {% endif %}
-        {% if config.extra.about.enable %}
+        {% if config.extra.about.enable | default(value=false)  %}
+        <br />
         <hr class="soften">
-        <section id="about" class="py-0 py-sm-5">
-            <div class="container bg-transparent">
-                <h3 class="text-center bg-transparent">{{ config.extra.about.title }}</h3>
-                <div class="bg-transparent row justify-content-center px-3 py-5">
-                    {% if config.extra.about.image %}
+        <br />
+        <section id="about">
+            <div class="container">
+                <h3 class="text-center">{{ config.extra.about.title }}</h3>
+                <div class="row">
+                    {% if config.extra.about.image | default(value=false) %}
                     <div class="span4">
                         <div class="">
                             <img src="{{ config.extra.about.image }}" class="img-thumbnail mx-auto" alt="" width="300" height="300">
                         </div>
                     </div>
                     {% endif %}
-                    <div class="col-sm-12 col-md-12 col-lg-8 content">
+                    <div class="content">
                         {{ config.extra.about.content }}
-
-                        {% if config.extra.about.skills.enable %}
+                        {% if config.extra.about.skills.enable | default(value=false) %}
                         {{ config.extra.about.skills.title }}
                         <div>
                             {% for item in config.extra.about.skills.items %}
-                            <button type="button">{{ item }}</button>
+                            <span class="label">{{ item }}</span>
                             {% endfor %}
                         </div>
                         {% endif %}
@@ -170,40 +173,16 @@
         </section>
         {% endif %}
 
-        {% if config.extra.experience.enable %}
-        <section id="experience" class="py-5">
+        {% if config.extra.experience.enable | default(value=false) %}
+        <br />
+        <hr class="soften">
+        <br />
+        <section id="experience">
             <div class="container">
                 <h3 class="text-center">{{ config.extra.experience.title }}</h3>
-                <div class="row justify-content-center">
-                    <div class="col-sm-12 col-md-8 col-lg-8 py-5">
-                        <div class="experience-container px-3 pt-2">
-                            <ul class="nav nav-pills mb-3 bg-transparent primary-font" id="pills-tab" role="tablist">
-                                {% for company in config.extra.experiences.companies %}
-                                {% set sanitizedCompany = company.company | replace(from=" ", to="-") %}
-                                <li class="nav-item px-1 bg-transparent" role="presentation">
-                                    <div
-                                        class="nav-link bg-transparent{% if loop.first %} active{% endif %}"
-                                        aria-selected="{{ loop.first }}"
-                                        role="tab"
-                                        data-bs-toggle="pill"
-                                        id='{{ sanitizedCompany }}-tab'
-                                        data-bs-target='#pills-{{ sanitizedCompany }}'
-                                        aria-controls='{{ sanitizedCompany }}'
-                                    >
-                                        {{ company.company }}
-                                    </div>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </div>
-
-
-
-              <div class="bd-example bd-example-tabs">
-                <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0px;">
+              <div>
+                <ul class="nav nav-tabs tab_no_margin_bottom" id="myTab" role="tablist">
                   {% for company in config.extra.experiences.companies %}
                   {% set sanitizedCompany = company.company | replace(from=" ", to="-") %}
                   <li class="nav-item {% if loop.first %} active{% endif %}">
@@ -216,8 +195,17 @@
                   {% set sanitizedCompany = company.company | replace(from=" ", to="-") %}
                   <div class="tab-pane {% if loop.first %} active show{% endif %}" id="{{ sanitizedCompany }}" role="tabpanel" aria-labelledby="{{ sanitizedCompany }}-tab">
                     <div class="hero-unit">
-                      <h1>{{ company.company }}</h1>
-                      <p>{{ company.company }} {{ company.companyUrl }}</p>
+                      <h1><a href="{{ company.companyUrl}}" target="_blank" class="btn btn-large btn-block btn-primary">{{ company.company }}</a></h1>
+                      {% for job in company.jobs %}
+                      <h3>{{ job.job }}</h3>
+                      <small>{{ job.date }}</small>
+                      <p>{{ job.content }}</p>
+                      <ul class="responsive-utilities-test">
+                        {% for content in job.content_in_list %}
+                          <li class="square_list_style">{{ content }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endfor %}
                     </div>
                     </div>
                   {% endfor %}
@@ -227,8 +215,42 @@
         </section>
         {% endif %}
 
-        {% endblock main %}
+        {% if config.extra.education.enable | default(value=false) %}
+        <br />
+        <hr class="soften">
+        <br />
+        <section id="education">
+          <div class="container">
+            <h3 class="text-center">{{ config.extra.education.title }}</h3>
+          </div>
+          {% for school in config.extra.education.schools %}
+            <div class="lead">
+              <h3>{{ school.title }}</h3>
+              <h1><a href="{{ school.url }}" target="_blank">{{ school.school }}</a></h1>
+              <span>{{ school.date }}</span>
+            </div>
+          {% endfor %}
+        </section>
+        {% endif %}
 
+        {% if config.extra.contact.enable | default(value=false) %}
+        <br />
+        <hr class="soften">
+        <br />
+        <section id="contact">
+          <div class="container">
+            <h3 class="text-center">Get in Touch</h3>
+            <p class="text-center">{{ config.extra.contact.content }}</p>
+            <div class="text-center">
+              <a href="{{ config.extra.contact.link }}" class="btn btn-info" target="_blank" >
+                {{ config.extra.contact.name }}
+              </a>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
+        {% endblock main %}
 
       </div>
     </div> <!-- row -->
@@ -259,6 +281,10 @@
         {% endif %}
         |
         Built on <a href="https://getzola.org" target="_blank">Zola</a>
+        |
+        Inspired by <a href="https://github.com/gurusabarish/hugo-profile" target="_blank" title="Designed and developed by gurusabarish">
+          Hugo Profile
+        </a>
     </p>
   </footer>
 

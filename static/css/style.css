@@ -5,3 +5,11 @@ body {
 .navmargin {
 	margin-top: 2em;
 }
+
+.square_list_style {
+	list-style: square;
+}
+
+.tab_no_margin_bottom {
+	margin-bottom: 0px;
+}
