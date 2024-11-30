@@ -72,11 +72,11 @@
             <div class="nav-collapse collapse">
               <ul class="nav">
                 {% block navbar %}
-                {% for item in config.extra.zola386_menu %}
-                <li class="{% if item.path == current_path | replace(from="/", to="") %}active{% endif %}">
-                  <a href="{{ config.base_url }}/{{ item.path }}"><span>{{ item.name }}</span></a>
-                </li>
-                {% endfor %}
+                  {% for item in config.extra.zola386_menu %}
+                    <li>
+                      <a href="{{ item.path }}"><span>{{ item.name }}</span></a>
+                    </li>
+                  {% endfor %}
                 {% endblock %}
               </ul>
             </div>
