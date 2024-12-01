@@ -13,3 +13,7 @@ body {
 .tab_no_margin_bottom {
 	margin-bottom: 0px;
 }
+
+.rounded-circle {
+	border-radius:50%!important
+}
